@@ -1,0 +1,430 @@
+================================================================================
+PRIORITYQUEUE CHEAT SHEET
+================================================================================
+Intelligent Task Prioritization for Team Brain
+Version: 1.0.0 | Zero Dependencies | Python 3.7+
+================================================================================
+
+QUICK START
+-----------
+1. Clone: git clone https://github.com/DonkRonk17/PriorityQueue.git
+2. Run: python priorityqueue.py --help
+3. Add: python priorityqueue.py add "My task"
+4. Work: python priorityqueue.py next
+
+================================================================================
+CLI COMMANDS - TASK MANAGEMENT
+--------------------------------------------------------------------------------
+
+Add Task:
+  priorityqueue add "title"
+  priorityqueue add "title" --priority HIGH
+  priorityqueue add "title" -p CRITICAL -a ATLAS
+  priorityqueue add "title" --deadline "2026-01-25T17:00:00"
+  priorityqueue add "title" --depends-on abc123
+  priorityqueue add "title" --tags urgent security
+  priorityqueue add "title" --category BUGFIX
+  priorityqueue add "title" --duration 60
+
+Get Task:
+  priorityqueue get abc123
+  priorityqueue get abc123 --verbose
+
+Update Task:
+  priorityqueue update abc123 --title "New title"
+  priorityqueue update abc123 --priority HIGH
+  priorityqueue update abc123 --agent ATLAS
+  priorityqueue update abc123 --deadline "2026-01-30T17:00:00"
+  priorityqueue update abc123 --notes "Updated notes"
+
+Delete Task:
+  priorityqueue delete abc123
+
+================================================================================
+CLI COMMANDS - STATUS TRANSITIONS
+--------------------------------------------------------------------------------
+
+Start Working:
+  priorityqueue start abc123
+  priorityqueue start abc123 --agent ATLAS
+
+Complete Task:
+  priorityqueue complete abc123
+  priorityqueue complete abc123 --notes "All done!"
+
+Mark as Failed:
+  priorityqueue fail abc123
+  priorityqueue fail abc123 --reason "External API unavailable"
+
+Cancel Task:
+  priorityqueue cancel abc123
+  priorityqueue cancel abc123 --reason "Requirements changed"
+
+================================================================================
+CLI COMMANDS - QUERIES
+--------------------------------------------------------------------------------
+
+List Tasks:
+  priorityqueue list
+  priorityqueue list --status PENDING
+  priorityqueue list --status IN_PROGRESS
+  priorityqueue list --status BLOCKED
+  priorityqueue list --status COMPLETED
+  priorityqueue list --agent ATLAS
+  priorityqueue list --priority HIGH
+  priorityqueue list --limit 10
+  priorityqueue list --verbose
+
+Get Next Task:
+  priorityqueue next
+  priorityqueue next --agent ATLAS
+  priorityqueue next --verbose
+
+Search:
+  priorityqueue search "keyword"
+  priorityqueue search "login" --limit 20
+
+================================================================================
+CLI COMMANDS - DEPENDENCIES
+--------------------------------------------------------------------------------
+
+Add Dependency:
+  priorityqueue depend abc123 def456
+  # abc123 now depends on def456
+
+Add Task with Dependency:
+  priorityqueue add "Write tests" --depends-on abc123
+
+================================================================================
+CLI COMMANDS - AGENTS
+--------------------------------------------------------------------------------
+
+View Agent Status:
+  priorityqueue agents
+
+================================================================================
+CLI COMMANDS - STATISTICS
+--------------------------------------------------------------------------------
+
+View Stats:
+  priorityqueue stats
+
+View History:
+  priorityqueue history
+  priorityqueue history --limit 50
+
+================================================================================
+CLI COMMANDS - IMPORT/EXPORT
+--------------------------------------------------------------------------------
+
+Export:
+  priorityqueue export
+  priorityqueue export --output backup.json
+
+Import:
+  priorityqueue import backup.json
+  priorityqueue import backup.json --merge
+
+Clear Completed:
+  priorityqueue clear
+  priorityqueue clear --older-than 7
+
+================================================================================
+PRIORITY LEVELS
+--------------------------------------------------------------------------------
+
+CRITICAL  (1) [!!!]  Must be done immediately
+HIGH      (2) [!!]   Very important
+MEDIUM    (3) [!]    Normal priority (default)
+LOW       (4) [.]    Can wait
+BACKLOG   (5) [_]    Do when nothing else
+
+================================================================================
+TASK STATUSES
+--------------------------------------------------------------------------------
+
+PENDING      [PENDING]   Ready to start
+IN_PROGRESS  [ACTIVE]    Currently being worked on
+BLOCKED      [BLOCKED]   Waiting for dependencies
+COMPLETED    [DONE]      Successfully finished
+CANCELLED    [CANCEL]    No longer needed
+FAILED       [FAILED]    Failed after attempts
+
+================================================================================
+CATEGORIES
+--------------------------------------------------------------------------------
+
+DEVELOPMENT, DOCUMENTATION, TESTING, BUGFIX, FEATURE,
+RESEARCH, COORDINATION, MAINTENANCE, URGENT, OTHER
+
+================================================================================
+TEAM BRAIN AGENTS
+--------------------------------------------------------------------------------
+
+FORGE   - Orchestrator #1, Reviewer
+ATLAS   - Executor, Builder
+CLIO    - Linux/Ubuntu Specialist
+NEXUS   - Multi-Platform Agent
+BOLT    - Free Executor (Cline + Grok)
+PORTER  - Mobile Specialist
+ANY     - Available to any agent
+
+================================================================================
+PYTHON API - QUICK START
+--------------------------------------------------------------------------------
+
+from priorityqueue import PriorityQueue, TaskPriority, TaskCategory
+
+# Initialize
+queue = PriorityQueue()
+
+# Add task
+task_id = queue.add("My task", priority=TaskPriority.HIGH)
+
+# Get next
+task = queue.get_next("ATLAS")
+
+# Work lifecycle
+queue.start(task.id, "ATLAS")
+queue.complete(task.id, "Done!")
+
+================================================================================
+PYTHON API - TASK MANAGEMENT
+--------------------------------------------------------------------------------
+
+# Add with all options
+task_id = queue.add(
+    title="Task title",
+    description="Details",
+    priority=TaskPriority.HIGH,
+    category=TaskCategory.BUGFIX,
+    assigned_agent="ATLAS",
+    deadline="2026-01-25T17:00:00",
+    dependencies=["other_task_id"],
+    tags=["urgent", "security"],
+    estimated_duration=60,
+    created_by="Logan",
+    metadata={"sprint": 5}
+)
+
+# Get task
+task = queue.get(task_id)
+
+# Update
+queue.update(task_id, title="New title", priority=TaskPriority.CRITICAL)
+
+# Delete
+queue.delete(task_id)
+
+================================================================================
+PYTHON API - STATUS TRANSITIONS
+--------------------------------------------------------------------------------
+
+queue.start(task_id, agent="ATLAS")    # Start working
+queue.complete(task_id, notes="Done")  # Complete
+queue.fail(task_id, reason="Error")    # Mark failed
+queue.cancel(task_id, reason="N/A")    # Cancel
+
+================================================================================
+PYTHON API - DEPENDENCIES
+--------------------------------------------------------------------------------
+
+# Add dependency
+queue.add_dependency(task_id, depends_on_id)
+
+# Remove dependency
+queue.remove_dependency(task_id, depends_on_id)
+
+# Circular dependencies are prevented automatically
+
+================================================================================
+PYTHON API - QUERIES
+--------------------------------------------------------------------------------
+
+# Get next highest priority
+task = queue.get_next()
+task = queue.get_next(agent="ATLAS")
+
+# Get lists
+pending = queue.get_pending(limit=50)
+in_progress = queue.get_in_progress()
+blocked = queue.get_blocked()
+completed = queue.get_completed(limit=50)
+
+# Filtered query
+tasks = queue.get_queue(
+    status=TaskStatus.PENDING,
+    agent="ATLAS",
+    priority=TaskPriority.HIGH,
+    category=TaskCategory.BUGFIX,
+    limit=20
+)
+
+# Search
+results = queue.search("login", limit=30)
+
+# Reorder
+queue.reorder()
+
+================================================================================
+PYTHON API - AGENT MANAGEMENT
+--------------------------------------------------------------------------------
+
+# Set availability
+queue.set_agent_available("ATLAS", False)
+
+# Get status
+status = queue.get_agent_status("ATLAS")
+# status.available, status.current_task, status.completed_today
+
+# Get all available
+available = queue.get_available_agents()
+
+# Get agent's tasks
+tasks = queue.get_agent_tasks("ATLAS")
+
+================================================================================
+PYTHON API - STATISTICS
+--------------------------------------------------------------------------------
+
+stats = queue.get_stats()
+# stats['total_tasks']
+# stats['by_status']
+# stats['by_priority']
+# stats['by_agent']
+# stats['completed_today']
+# stats['avg_completion_minutes']
+# stats['blocked_count']
+# stats['overdue_count']
+
+history = queue.get_history(limit=100)
+
+================================================================================
+PYTHON API - IMPORT/EXPORT
+--------------------------------------------------------------------------------
+
+# Export
+json_str = queue.export_queue()
+queue.export_queue(Path("backup.json"))
+
+# Import
+count = queue.import_queue(data, merge=False)
+count = queue.import_queue(data, merge=True)
+
+# Clear old completed
+count = queue.clear_completed(older_than_days=7)
+
+================================================================================
+PRIORITY SCORING FORMULA
+--------------------------------------------------------------------------------
+
+score = base_priority * urgency_multiplier * age_factor * blocked_penalty
+
+Where:
+- base_priority: 1-5 (CRITICAL to BACKLOG)
+- urgency_multiplier:
+    * Overdue: 0.1
+    * Due <1hr: 0.3
+    * Due <4hr: 0.5
+    * Due <24hr: 0.7
+    * Due <3d: 0.9
+    * Due >3d: 1.0
+- age_factor:
+    * >24hr old: 0.95
+    * >72hr old: 0.90
+- blocked_penalty: 10 (if BLOCKED)
+
+Lower score = Higher priority
+
+================================================================================
+FILE LOCATIONS
+--------------------------------------------------------------------------------
+
+Default Data Directory: ~/.priorityqueue/
+
+Files:
+- tasks.json     All tasks
+- agents.json    Agent status
+- history.json   Action log (last 1000)
+
+Custom location:
+  queue = PriorityQueue(config_dir="/custom/path")
+
+================================================================================
+INTEGRATION WITH OTHER TOOLS
+--------------------------------------------------------------------------------
+
+With SynapseLink:
+  from synapselink import quick_send
+  from priorityqueue import PriorityQueue
+
+  queue = PriorityQueue()
+  task = queue.get_next("ATLAS")
+  quick_send("ATLAS", "Task Assignment", task.title)
+
+With AgentHealth:
+  from agenthealth import AgentHealth
+  from priorityqueue import PriorityQueue
+
+  health = AgentHealth()
+  queue = PriorityQueue()
+  task = queue.get_next("ATLAS")
+  queue.start(task.id, "ATLAS")
+  health.start_session("ATLAS", session_id=task.id)
+
+With TaskQueuePro:
+  from taskqueuepro import TaskQueuePro
+  from priorityqueue import PriorityQueue
+
+  tqp = TaskQueuePro()
+  pq = PriorityQueue()
+  task_id = pq.add("Task", priority=TaskPriority.HIGH)
+  tqp.create_task(f"PQ:{task_id}")
+
+================================================================================
+TROUBLESHOOTING
+--------------------------------------------------------------------------------
+
+Task won't start:
+  - Check if BLOCKED (has incomplete dependencies)
+  - Verify task exists: queue.get(task_id)
+
+Circular dependency error:
+  - add_dependency() returns False
+  - Review dependency chain
+
+Task not in get_next():
+  - Check status is PENDING
+  - Check agent assignment matches
+
+Data not persisting:
+  - Verify config_dir is same
+  - Check file permissions
+
+================================================================================
+RESOURCES
+--------------------------------------------------------------------------------
+
+Documentation:   PriorityQueue/README.md
+Examples:        PriorityQueue/EXAMPLES.md
+Integration:     PriorityQueue/INTEGRATION_PLAN.md
+Quick Starts:    PriorityQueue/QUICK_START_GUIDES.md
+GitHub:          https://github.com/DonkRonk17/PriorityQueue
+Issues:          https://github.com/DonkRonk17/PriorityQueue/issues
+
+================================================================================
+QUICK COMMAND REFERENCE
+--------------------------------------------------------------------------------
+
+priorityqueue add "title" -p HIGH -a ATLAS       Add task
+priorityqueue list -s PENDING                    List pending
+priorityqueue next -a ATLAS                      Get next for agent
+priorityqueue start ID -a ATLAS                  Start task
+priorityqueue complete ID -n "Notes"             Complete task
+priorityqueue depend ID OTHER_ID                 Add dependency
+priorityqueue search "query"                     Search tasks
+priorityqueue stats                              View statistics
+priorityqueue agents                             View agent status
+priorityqueue export -o backup.json              Export queue
+
+================================================================================

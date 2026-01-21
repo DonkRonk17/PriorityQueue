@@ -1,0 +1,16 @@
+# PriorityQueue - Requirements
+# 
+# Zero external dependencies!
+# Uses only Python standard library (3.7+)
+#
+# Standard library modules used:
+# - argparse (CLI parsing)
+# - json (data serialization)
+# - uuid (unique IDs)
+# - heapq (priority queue operations)
+# - datetime (timestamps)
+# - pathlib (file paths)
+# - dataclasses (data structures)
+# - enum (enumerations)
+# - threading (thread safety)
+# - typing (type hints)

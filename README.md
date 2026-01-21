@@ -1,3 +1,5 @@
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/5538bce1-a825-4a50-8d83-0aedf551cf52" />
+
 # 🎯 PriorityQueue
 
 **Intelligent Task Prioritization for Team Brain**
@@ -949,6 +951,9 @@ class PriorityQueue:
 ```
 
 ---
+
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/da325eff-f553-46e9-bde5-11ec12a298a4" />
+
 
 ## 📝 Credits
 
